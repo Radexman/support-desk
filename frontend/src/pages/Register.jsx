@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { register } from '../features/Auth/authSlice';
+import { register, reset } from '../features/Auth/authSlice';
 import { FaUser } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
@@ -16,7 +17,22 @@ const Register = () => {
 
 	const dispatch = useDispatch();
 
-	const { user, isLoading, isSuccess, message } = useSelector((state) => state.auth);
+	const { user, isLoading, isSuccess, isError, message } = useSelector((state) => state.auth);
+
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (isError) {
+			toast.error(message);
+		}
+
+		// Redirect when logged in
+		if (isSuccess && user) {
+			navigate('/');
+		}
+
+		dispatch(reset());
+	}, [isError, isSuccess, user, message, navigate, dispatch]);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -69,7 +85,6 @@ const Register = () => {
 				<h1>
 					<FaUser />
 					Register
-					{user}
 				</h1>
 				<p>Please create an account</p>
 			</section>

@@ -14,7 +14,7 @@ const Login = () => {
 
 	const dispatch = useDispatch();
 
-	const { user, isLoading, isError, message } = useSelector((state) => state.auth);
+	const { user, isLoading, isSuccess, isError, message } = useSelector((state) => state.auth);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
