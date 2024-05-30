@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { register } from '../features/Auth/authSlice';
 import { FaUser } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
@@ -11,6 +13,10 @@ const Register = () => {
 	});
 
 	const { name, email, password, password2 } = formData;
+
+	const dispatch = useDispatch();
+
+	const { user, isLoading, isSuccess, message } = useSelector((state) => state.auth);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -48,7 +54,13 @@ const Register = () => {
 			return;
 		}
 
-		toast.success('Registration successful');
+		const userData = {
+			name,
+			email,
+			password,
+		};
+
+		dispatch(register(userData));
 	};
 
 	return (
@@ -57,6 +69,7 @@ const Register = () => {
 				<h1>
 					<FaUser />
 					Register
+					{user}
 				</h1>
 				<p>Please create an account</p>
 			</section>
