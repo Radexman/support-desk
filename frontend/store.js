@@ -5,7 +5,7 @@ import ticketReducer from './src/features/Tickets/ticketSlice';
 const store = configureStore({
 	reducer: {
 		auth: authReducer,
-		ticket: ticketReducer,
+		tickets: ticketReducer,
 	},
 });
 
