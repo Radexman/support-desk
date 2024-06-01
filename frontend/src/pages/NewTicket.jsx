@@ -1,14 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { createTicket, reset } from '../features/Tickets/ticketSlice';
+import { createTicket } from '../features/Tickets/ticketSlice';
 import BackButton from '../components/BackButton';
-import Spinner from '../components/Spinner';
 
-const NewTicket = () => {
+function NewTicket() {
 	const { user } = useSelector((state) => state.auth);
-	const { isLoading, isError, isSuccess, message } = useSelector((state) => state.ticket);
+
 	const [name] = useState(user.name);
 	const [email] = useState(user.email);
 	const [product, setProduct] = useState('iPhone');
@@ -17,62 +16,53 @@ const NewTicket = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		if (isError) {
-			toast.error(message);
-		}
-
-		if (isSuccess) {
-			dispatch(reset());
-			navigate('/tickets');
-		}
-
-		dispatch(reset());
-	}, [dispatch, isError, isSuccess, navigate, message]);
-
-	const handleSubmit = (e) => {
+	const onSubmit = (e) => {
 		e.preventDefault();
-		dispatch(createTicket({ product, description }));
+		dispatch(createTicket({ product, description }))
+			.unwrap()
+			.then(() => {
+				// We got a good response so navigate the user
+				navigate('/tickets');
+				toast.success('New ticket created!');
+			})
+			.catch(toast.error);
 	};
-
-	if (isLoading) {
-		return <Spinner />;
-	}
 
 	return (
 		<>
-			<BackButton url='/' />
+			<BackButton />
 			<section className='heading'>
 				<h1>Create New Ticket</h1>
 				<p>Please fill out the form below</p>
 			</section>
+
 			<section className='form'>
 				<div className='form-group'>
 					<label htmlFor='name'>Customer Name</label>
 					<input
 						type='text'
+						className='form-control'
 						value={name}
 						disabled
-						className='form-control'
 					/>
 				</div>
 				<div className='form-group'>
-					<label htmlFor='eamil'>Customer Email</label>
+					<label htmlFor='email'>Customer Email</label>
 					<input
-						type='email'
+						type='text'
+						className='form-control'
 						value={email}
 						disabled
-						className='form-control'
 					/>
 				</div>
-				<form onSubmit={handleSubmit}>
+				<form onSubmit={onSubmit}>
 					<div className='form-group'>
 						<label htmlFor='product'>Product</label>
 						<select
 							name='product'
 							id='product'
-							onChange={(e) => setProduct(e.target.value)}
 							value={product}
+							onChange={(e) => setProduct(e.target.value)}
 						>
 							<option value='iPhone'>iPhone</option>
 							<option value='Macbook Pro'>Macbook Pro</option>
@@ -92,17 +82,12 @@ const NewTicket = () => {
 						></textarea>
 					</div>
 					<div className='form-group'>
-						<button
-							type='submit'
-							className='btn btn-block'
-						>
-							Submit
-						</button>
+						<button className='btn btn-block'>Submit</button>
 					</div>
 				</form>
 			</section>
 		</>
 	);
-};
+}
 
 export default NewTicket;

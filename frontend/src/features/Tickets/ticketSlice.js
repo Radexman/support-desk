@@ -29,10 +29,7 @@ export const getTickets = createAsyncThunk('tickets/getAll', async (_, thunkAPI)
 		const token = thunkAPI.getState().auth.user.token;
 		return await ticketService.getTickets(token);
 	} catch (error) {
-		const message =
-			(error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-		return thunkAPI.rejectWithValue(message);
+		return thunkAPI.rejectWithValue(error.response.data);
 	}
 });
 
