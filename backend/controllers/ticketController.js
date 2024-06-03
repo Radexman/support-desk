@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 
+const User = require('../models/userModel');
 const Ticket = require('../models/ticketModel');
 
 // NOTE: no need to get the user, we already have them on req object from
