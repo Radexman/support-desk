@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getTicket, closeTicket } from '../features/Tickets/ticketSlice';
-import { getNotes } from '../features/Notes/noteSlice';
+import { getNotes, createNote } from '../features/Notes/noteSlice';
 import { FaPlus } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import NoteItem from '../components/NoteItem';
@@ -53,7 +53,7 @@ const Ticket = () => {
 			return;
 		}
 
-		console.log(noteText);
+		dispatch(createNote({ noteText, ticketId }));
 		closeModal();
 	};
 
